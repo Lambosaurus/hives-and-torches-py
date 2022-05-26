@@ -18,3 +18,10 @@ class Camera:
 
     def map_to_screen(self, pos: v2):
         return ((pos - self.pos).elementwise() * self.tile_size) + self.center
+
+    def screen_to_map(self, pos: v2):
+        return self._vector_round((pos - self.center).elementwise() / self.tile_size + self.pos)
+
+    def _vector_round(self, v: v2) -> v2:
+        return v2(int(round(v[0])), int(round(v[1])))
+

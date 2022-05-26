@@ -1,9 +1,9 @@
-import re
 import pygame
 from pygame.math import Vector2 as v2
 import camera
 import tilemap
-import random
+import map_gen
+import creature
 
 
 class World:
@@ -11,19 +11,7 @@ class World:
         self.entities = []
         self.camera = camera.Camera()
         self.tilemap = tilemap.Tilemap(v2(32,32), (16,16))
-        self._fill_map(self.tilemap)
-
-    def _fill_map(self, t: tilemap.Tilemap):
-        grass = tilemap.get_tile("grass")
-        rock = tilemap.get_tile("rock")
-        size = t.get_size()
-        for x in range(size[0]):
-            for y in range(size[1]):
-                t.set_tile(v2(x,y), grass)
-        for _ in range(16):
-            pos = v2(random.randint(0, size[0]-1), random.randint(0, size[1]-1))
-            t.set_tile(pos, rock)
-
+        map_gen.generate_map(self.tilemap)
 
     def draw(self, surface: pygame.Surface):
         self.camera.set_surface(surface)
@@ -34,6 +22,15 @@ class World:
             sprite = entity.get_sprite()
             if sprite is not None:
                 self._draw_sprite(sprite, entity.pos)
+
+    def add_entity(self, entity: creature.Creature):
+        self.entities.append(entity)
+
+    def get_entity_at(self, pos: v2) -> creature.Creature | None:
+        for entity in self.entities:
+            if entity.pos == pos:
+                return entity
+        return None
                 
     def _draw_sprite(self, sprite: pygame.Surface, pos: v2):
         pos = self.camera.map_to_screen(pos)
