@@ -20,9 +20,7 @@ def main():
     
     while game.run(ui.handle_event):
 
-        w.draw(game.window)
         ui.draw(game.window)
-
         game.end_frame()
 
 
