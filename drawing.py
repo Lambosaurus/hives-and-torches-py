@@ -11,8 +11,17 @@ def create_circle(color: tuple, size: v2):
     pygame.draw.circle(surface, color, (size[0]//2, size[1]//2), size[0]//2)
     return surface
 
-def draw_text(surface: pygame.Surface, text: str, color: tuple = (255,255,255), size: int = 8, font: str = "Arial", pos: v2 = (0,0)):
-    font = pygame.font.SysFont(font, size)
-    text_surface = font.render(text, True, color)
+FONT_DICT = None
+
+def draw_text(surface: pygame.Surface, pos: v2, text: str, size: int = 12, color: tuple = (255,255,255)):
+    
+    global FONT_DICT
+    if FONT_DICT is None:
+        pygame.font.init()
+        FONT_DICT = {}
+    if size not in FONT_DICT:
+        FONT_DICT[size] = pygame.font.SysFont("monospace", size)
+
+    text_surface = FONT_DICT[size].render(text, True, color)
     surface.blit(text_surface, pos)
 
